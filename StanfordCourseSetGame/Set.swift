@@ -13,10 +13,12 @@ import Foundation
 class Set {
     
     var listOfCards = [Card]()
+    var maxNumberOfShownCards: Int
     var indecesOfSelectedCards = [Int]()
     var indecesOfShownCards = [Int]()
     var indecesOfMatchedCards = [Int]()
-    init(startingWith startingCardsCount: Int) {
+    
+    init(startingWith startingCardsCount: Int, withMaxShown maxShown: Int) {
         for number in Number.allCases {
             for shape in Shape.allCases {
                 for color in Color.allCases {
@@ -27,6 +29,8 @@ class Set {
             }
         }
         indecesOfSelectedCards = generateListOfDistinctNumbers(count: startingCardsCount, upTo: listOfCards.count)
+        
+        maxNumberOfShownCards = maxShown
     }
     
     
@@ -35,6 +39,10 @@ class Set {
         if indecesOfShownCards.contains(indexOfSelectedCard) {
             if indecesOfSelectedCards.count == 2 {
                 indecesOfSelectedCards.append(indexOfSelectedCard)
+                if !(listOfCards[indecesOfSelectedCards[0]] == listOfCards[indecesOfSelectedCards[1]]) || !(listOfCards[indecesOfSelectedCards[1]] == listOfCards[indecesOfSelectedCards[2]]) || !(listOfCards[indecesOfSelectedCards[0]] == listOfCards[indecesOfSelectedCards[2]]) {
+                    
+                    indecesOfMatchedCards.append(contentsOf: indecesOfSelectedCards)
+                }
             } else if indecesOfSelectedCards.count >= 3 {
                 indecesOfSelectedCards.removeAll()
                 indecesOfSelectedCards.append(indexOfSelectedCard)
@@ -42,7 +50,13 @@ class Set {
                 indecesOfSelectedCards.append(indexOfSelectedCard)
             }
         } else {
-            print("Card /(index) is not being shown!")
+            print("Card \(indexOfSelectedCard) is not being shown!")
+        }
+    }
+    
+    func dealNewCards() {
+        if !(indecesOfShownCards.count > maxNumberOfShownCards) {
+            indecesOfShownCards.append(contentsOf: generateListOfDistinctNumbers(count: 3, upTo: listOfCards.count))
         }
     }
     
@@ -52,7 +66,7 @@ class Set {
             var randomInt: Int
             repeat {
                 randomInt = Int.random(in: 0..<range)
-            } while indecesOfShownCards.contains(randomInt)
+            } while indecesOfShownCards.contains(randomInt) || indecesOfMatchedCards.contains(randomInt)
             
             tempListOfDistinctNumbers.append(randomInt)
         }
@@ -60,12 +74,16 @@ class Set {
     }
 }
 
-struct Card {
+struct Card: Equatable {
     
     let shape: Shape
     let color: Color
     let shading: Shading
     let number: Number
+    
+    static func == (lhs: Card, rhs: Card) -> Bool {
+        return lhs.color == rhs.color || lhs.shape == rhs.shape || lhs.shading == rhs.shading || lhs.number == rhs.number
+    }
 }
 
 enum Shape: CaseIterable {
@@ -83,5 +101,3 @@ enum Shading: CaseIterable {
 enum Number: Int, CaseIterable {
     case one, two, three
 }
-
-
