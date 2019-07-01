@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     var selectedColor = "2d3142"
     
     // Model "Connection"
-    var SetModel = Set(startingWith: 12, withMaxShown: 24)
+    lazy var SetModel = Set(startingWith: 12, withMaxShown: listOfCards.count)
     
     override func viewDidLoad() {
         super.viewDidLoad()

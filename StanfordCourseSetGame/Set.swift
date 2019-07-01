@@ -28,9 +28,9 @@ class Set {
                 }
             }
         }
-        indecesOfSelectedCards = generateListOfDistinctNumbers(count: startingCardsCount, upTo: listOfCards.count)
-        
         maxNumberOfShownCards = maxShown
+        
+        indecesOfSelectedCards = generateListOfDistinctNumbers(count: startingCardsCount, upTo: listOfCards.count)
     }
     
     
@@ -66,7 +66,7 @@ class Set {
             var randomInt: Int
             repeat {
                 randomInt = Int.random(in: 0..<range)
-            } while indecesOfShownCards.contains(randomInt) || indecesOfMatchedCards.contains(randomInt)
+            } while (indecesOfShownCards.contains(randomInt) || indecesOfMatchedCards.contains(randomInt))
             
             tempListOfDistinctNumbers.append(randomInt)
         }
